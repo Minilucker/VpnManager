@@ -80,26 +80,29 @@ case "$action" in
   if [ ! -d /tmp/vpnManager ]; then
     mkdir /tmp/vpnManager
   fi
-  log_file=/tmp/vpnManager/openvpn.log
-  sudo /usr/sbin/openvpn --config $VPN --log "$log_file" --daemon --mute-replay-warnings | grep -v "WARNING"
-  sudo chmod +r "$log_file"
+  sudo /usr/sbin/openvpn --config $VPN --log "/tmp/vpnManager/openvpn.log" --daemon --mute-replay-warnings | grep -v "WARNING"
+  sudo chmod +r "/tmp/vpnManager/openvpn.log"
   ;;
   stop )
   stopVpn
   exit 0
   ;;
+
+  '')
+  echo "pls specify an action (see -h)"
+  exit 1
 esac
 
 start=$(date +%s)
 while [ $(($(date +%s) - $start)) -lt 10 ]
 do
-output=$(/usr/bin/cat -s "$log_file")
+output=$(/usr/bin/cat -s "/tmp/vpnManager/openvpn.log")
 check="Initialization Sequence Completed"
 if [[ "$output" == *"$check"* ]]
 then
     echo "Successfully started VPN !"
-    sudo rm "$log_file"
+    sudo rm "/tmp/vpnManager/openvpn.log"
     exit 0
 fi
 done
-echo "couldn't start openvpn with $VPN, you might want to change it or check the logs at $log_file"
+echo "couldn't start openvpn with $VPN, you might want to change it or check the logs at /tmp/vpnManager/openvpn.log"
