@@ -1,0 +1,2 @@
+just some bash script to train.
+also useful if you don't want openvpn process to hold your terminal, i made it to use it with hack the box, but it work with any .ovpn file, if you want a specific one, just export VPN env variable, otherwise it will search for it from root dir
